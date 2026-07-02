@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Золотое кольцо России — гордость нашей Родины</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            background: linear-gradient(180deg, #0a1628 0%, #1a3a6a 35%, #2a5a8a 65%, #1a3a6a 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 15px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 25px 20px 20px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.10), rgba(255, 215, 0, 0.02));
+            border-radius: 24px;
+            border-bottom: 4px solid #FFD700;
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '⭐';
+            position: absolute;
+            top: -5px;
+            left: 30px;
+            font-size: 50px;
+            opacity: 0.08;
+        }
+        .header::after {
+            content: '⭐';
+            position: absolute;
+            bottom: -5px;
+            right: 30px;
+            font-size: 50px;
+            opacity: 0.08;
+        }
+
+        .header .patriotic-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #D52B1E, #0039A6);
+            padding: 4px 20px;
+            border-radius: 30px;
+            font-size: 0.75em;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #FFD700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            border: 1px solid rgba(255, 215, 0, 0.15);
+        }
+
+        .header h1 {
+            font-size: 2.6em;
+            font-weight: 800;
+            color: #FFD700;
+            text-shadow: 0 0 50px rgba(255, 215, 0, 0.20);
+            letter-spacing: 2px;
+        }
+
+        .header .subtitle {
+            font-size: 1.15em;
+            color: #AAC4E0;
+            margin-top: 6px;
+            letter-spacing: 1px;
+        }
+
+        .header .patriotic-quote {
+            font-size: 1em;
+            color: #D4E4FF;
+            margin-top: 10px;
+            font-style: italic;
+            background: rgba(255, 215, 0, 0.04);
+            padding: 8px 24px;
+            border-radius: 30px;
+            display: inline-block;
+            border-left: 3px solid #FFD700;
+            border-right: 3px solid #FFD700;
+        }
+
+        .header .instruction {
+            font-size: 0.95em;
+            color: #D4E4FF;
+            margin-top: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 10px 28px;
+            border-radius: 40px;
+            display: inline-block;
+            border: 1px solid rgba(255, 215, 0, 0.06);
+        }
+
+        .flag-line {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .flag-line span {
+            width: 60px;
+            height: 12px;
+            border-radius: 6px;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
+        }
+        .flag-line .white {
+            background: #FFFFFF;
+        }
+        .flag-line .blue {
+            background: #0039A6;
+        }
+        .flag-line .red {
+            background: #D52B1E;
+        }
+
+        .map-container {
+            max-width: 1150px;
+            margin: 0 auto 25px;
+            background: linear-gradient(145deg, rgba(26, 58, 106, 0.35), rgba(11, 26, 58, 0.65));
+            border-radius: 32px;
+            padding: 18px 15px 15px;
+            border: 1px solid rgba(255, 215, 0, 0.06);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .map-svg-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 62%;
+            height: 0;
+        }
+
+        .map-svg-wrapper svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 8px 30px rgba(0, 0, 0, 0.2));
+        }
+
+        .region {
+            transition: all 0.4s ease;
+            cursor: default;
+        }
+        .region:hover {
+            filter: brightness(1.15);
+        }
+
+        .city-point {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .city-point:hover .city-circle {
+            r: 15;
+            filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.9));
+        }
+
+        .city-point:hover .city-label {
+            font-weight: 700;
+            fill: #FFD700;
+        }
+
+        .city-circle {
+            fill: #FFD700;
+            stroke: #B8860B;
+            stroke-width: 2.5;
+            transition: fill 0.4s, r 0.3s, stroke-width 0.3s;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+        }
+
+        .city-circle.opened {
+            fill: #FF6B6B;
+            stroke: #FFD700;
+            stroke-width: 3;
+        }
+
+        .city-label {
+            fill: #FFFFFF;
+            font-size: 9px;
+            font-weight: 600;
+            text-anchor: middle;
+            dominant-baseline: central;
+            pointer-events: none;
+            text-shadow: 0 0 16px rgba(0, 0, 0, 0.95);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            transition: fill 0.3s, font-weight 0.3s;
+        }
+
+        .city-icon-text {
+            font-size: 20px;
+            text-anchor: middle;
+            dominant-baseline: central;
+            pointer-events: none;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+        }
+
+        .progress-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 16px;
+            padding: 12px 22px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.04), rgba(255, 215, 0, 0.01));
+            border-radius: 40px;
+            border: 1px solid rgba(255, 215, 0, 0.04);
+        }
+
+        .progress-bar-wrap {
+            flex: 1;
+            min-width: 140px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #FFD700, #FFA500, #FF6B6B);
+            border-radius: 20px;
+            transition: width 0.6s ease;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.15);
+        }
+
+        .progress-text {
+            font-size: 0.95em;
+            color: #D4E4FF;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .progress-text span {
+            color: #FFD700;
+            font-size: 1.1em;
+        }
+
+        .city-card {
+            display: none;
+            max-width: 1100px;
+            margin: 0 auto 25px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+            backdrop-filter: blur(16px);
+            border-radius: 32px;
+            padding: 30px 32px 32px;
+            border: 1px solid rgba(255, 215, 0, 0.08);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeSlide 0.5s ease;
+        }
+
+        .city-card.active {
+            display: block;
+        }
+
+        @keyframes fadeSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .city-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.06);
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+        }
+
+        .city-card-header h2 {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #FFD700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.08);
+        }
+
+        .city-status {
+            font-size: 0.9em;
+            background: rgba(255, 215, 0, 0.05);
+            padding: 6px 20px;
+            border-radius: 30px;
+            color: #D4E4FF;
+            border: 1px solid rgba(255, 215, 0, 0.04);
+        }
+
+        .city-card-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+        }
+
+        @media (max-width: 760px) {
+            .city-card-body {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .city-card-header h2 {
+                font-size: 1.6em;
+            }
+            .header h1 {
+                font-size: 1.8em;
+            }
+            .city-label {
+                font-size: 7px;
+            }
+        }
+
+        .city-story {
+            background: linear-gradient(145deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.04));
+            border-radius: 20px;
+            padding: 18px 22px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .city-story h3 {
+            color: #FFD700;
+            font-size: 1.05em;
+            margin-bottom: 10px;
+        }
+
+        .city-story p {
+            font-size: 0.98em;
+            line-height: 1.8;
+            color: #D4E4FF;
+            margin-bottom: 12px;
+        }
+
+        .fact-box {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.04), rgba(255, 215, 0, 0.01));
+            border-left: 4px solid #FFD700;
+            padding: 12px 16px;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .fact-box strong {
+            color: #FFD700;
+        }
+        .fact-box span {
+            color: #D4E4FF;
+        }
+
+        .city-task {
+            background: linear-gradient(145deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.04));
+            border-radius: 20px;
+            padding: 18px 22px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .city-task h3 {
+            color: #FFD700;
+            font-size: 1.05em;
+            margin-bottom: 10px;
+        }
+
+        .task-text {
+            font-size: 0.97em;
+            line-height: 1.6;
+            color: #D4E4FF;
+            padding: 12px 16px;
+            background: rgba(255, 215, 0, 0.02);
+            border-radius: 14px;
+            margin-bottom: 14px;
+            border: 1px solid rgba(255, 215, 0, 0.03);
+        }
+
+        .city-task textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 215, 0, 0.06);
+            background: rgba(255, 255, 255, 0.02);
+            color: #fff;
+            font-size: 0.97em;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            resize: vertical;
+            transition: border 0.3s;
+        }
+
+        .city-task textarea:focus {
+            outline: none;
+            border-color: #FFD700;
+        }
+
+        .city-task textarea::placeholder {
+            color: #6A8BB0;
+        }
+
+        .btn-complete {
+            margin-top: 14px;
+            padding: 12px 36px;
+            background: linear-gradient(135deg, #FFD700, #E8A800);
+            border: none;
+            border-radius: 40px;
+            font-size: 1em;
+            font-weight: 700;
+            color: #0B1A3A;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.10);
+        }
+
+        .btn-complete:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 32px rgba(255, 215, 0, 0.20);
+        }
+
+        .btn-complete:disabled {
+            opacity: 0.3;
+            transform: none;
+            cursor: default;
+        }
+
+        .task-status {
+            margin-top: 12px;
+            font-size: 0.95em;
+            color: #6FCF97;
+            display: none;
+            font-weight: 600;
+        }
+
+        .task-status.visible {
+            display: block;
+        }
+
+        .btn-close-card {
+            margin-top: 20px;
+            padding: 10px 30px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 40px;
+            color: #D4E4FF;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-close-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .final-screen {
+            display: none;
+            max-width: 820px;
+            margin: 0 auto 25px;
+            background: linear-gradient(145deg, rgba(255, 215, 0, 0.05), rgba(255, 215, 0, 0.01));
+            border-radius: 32px;
+            padding: 48px 40px;
+            text-align: center;
+            border: 2px solid #FFD700;
+            box-shadow: 0 0 80px rgba(255, 215, 0, 0.04);
+            animation: fadeSlide 0.8s ease;
+        }
+
+        .final-screen.active {
+            display: block;
+        }
+
+        .final-icon {
+            font-size: 80px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .final-screen .final-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #D52B1E, #0039A6);
+            padding: 6px 24px;
+            border-radius: 40px;
+            font-size: 0.85em;
+            font-weight: 700;
+            color: #FFD700;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.15);
+        }
+
+        .final-screen h2 {
+            font-size: 2.5em;
+            color: #FFD700;
+            margin: 10px 0 8px;
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.10);
+        }
+
+        .final-screen .final-subtitle {
+            font-size: 1.1em;
+            color: #AAC4E0;
+            margin-bottom: 16px;
+        }
+
+        .final-screen .final-text {
+            font-size: 1.05em;
+            color: #D4E4FF;
+            max-width: 650px;
+            margin: 0 auto 20px;
+            line-height: 1.7;
+        }
+
+        .certificate-award {
+            background: linear-gradient(145deg, rgba(255, 215, 0, 0.06), rgba(255, 215, 0, 0.01));
+            border: 2px solid #FFD700;
+            border-radius: 24px;
+            padding: 28px 24px 22px;
+            margin: 16px 0 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .certificate-award::before {
+            content: '🏛️';
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 60px;
+            opacity: 0.04;
+        }
+
+        .certificate-award .award-title {
+            font-size: 1.6em;
+            color: #FFD700;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .certificate-award .award-subtitle {
+            font-size: 0.95em;
+            color: #AAC4E0;
+            margin: 4px 0 6px;
+        }
+
+        .certificate-award .award-name {
+            font-size: 1.3em;
+            color: #FFFFFF;
+            font-weight: 600;
+            margin: 6px 0;
+            padding: 4px 20px;
+            display: inline-block;
+            border-bottom: 2px solid #FFD700;
+        }
+
+        .certificate-award .award-desc {
+            font-size: 0.95em;
+            color: #D4E4FF;
+            margin: 6px 0 10px;
+            line-height: 1.6;
+        }
+
+        .certificate-award .award-stamp {
+            font-size: 38px;
+            margin-top: 6px;
+            letter-spacing: 8px;
+        }
+
+        .certificate-award .award-date {
+            font-size: 0.8em;
+            color: #6A8BB0;
+            margin-top: 6px;
+        }
+
+        .final-screen .btn-reset {
+            padding: 12px 36px;
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid #FFD700;
+            border-radius: 40px;
+            color: #FFD700;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .final-screen .btn-reset:hover {
+            background: rgba(255, 215, 0, 0.08);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px 0 8px;
+            color: #5A7A9A;
+            font-size: 0.85em;
+            border-top: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .footer .heart {
+            color: #D52B1E;
+        }
+        .footer .gold {
+            color: #FFD700;
+        }
+
+        @media (max-width: 500px) {
+            .header h1 {
+                font-size: 1.4em;
+            }
+            .header .subtitle {
+                font-size: 0.85em;
+            }
+            .flag-line span {
+                width: 40px;
+                height: 10px;
+            }
+            .city-card {
+                padding: 16px 12px;
+            }
+            .city-story,
+            .city-task {
+                padding: 14px 14px;
+            }
+            .final-screen {
+                padding: 24px 16px;
+            }
+            .final-screen h2 {
+                font-size: 1.6em;
+            }
+            .certificate-award .award-title {
+                font-size: 1.2em;
+            }
+            .final-icon {
+                font-size: 56px;
+            }
+            .city-label {
+                font-size: 6px;
+            }
+            .city-icon-text {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== ШАПКА ===== -->
+    <header class="header">
+        <div class="flag-line">
+            <span class="white"></span>
+            <span class="blue"></span>
+            <span class="red"></span>
+        </div>
+
+        <div class="patriotic-badge">🇷🇺 СЛАВА РОССИИ</div>
+
+        <h1>✨ Золотое кольцо России</h1>
+        <p class="subtitle">Путешествие по 14 древним городам — сокровищницам нашей Родины</p>
+
+        <div class="patriotic-quote">
+            «Знать историю своей страны — значит любить её»
+        </div>
+
+        <p class="instruction">🗺️ Нажимай на города → узнавай их историю → выполняй патриотические задания → получи награду!</p>
+    </header>
+
+    <!-- ===== КАРТА ===== -->
+    <div class="map-container">
+        <div class="map-svg-wrapper">
+            <svg viewBox="0 0 1100 700" xmlns="http://www.w3.org/2000/svg">
+
+                <!-- РЕГИОНЫ ЦФО -->
+                <path d="M590,160 L660,140 L710,160 L740,200 L700,230 L660,240 L620,210 L600,180 Z"
+                      fill="rgba(52,152,219,0.12)" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                <path d="M710,140 L780,130 L830,160 L820,210 L780,230 L740,210 L720,180 Z"
+                      fill="rgba(46,204,113,0.10)" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                <path d="M660,240 L720,230 L760,270 L750,330 L700,350 L660,320 L650,270 Z"
+                      fill="rgba(155,89,182,0.10)" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                <path d="M580,280 L650,270 L670,340 L610,370 L570,350 L560,300 Z"
+                      fill="rgba(241,196,15,0.10)" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                <path d="M350,190 L460,170 L510,210 L490,260 L430,280 L370,260 L340,220 Z"
+                      fill="rgba(231,76,60,0.08)" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                <path d="M300,120 L400,100 L460,130 L450,170 L360,180 L300,160 Z"
+                      fill="rgba(52,73,94,0.08)" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                <path d="M200,150 L280,130 L320,170 L290,210 L240,220 L200,190 Z"
+                      fill="rgba(39,174,96,0.08)" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                <path d="M350,270 L430,260 L470,290 L450,340 L390,350 L340,310 Z"
+                      fill="rgba(142,68,173,0.08)" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                <path d="M470,310 L540,300 L580,350 L540,390 L480,380 L460,340 Z"
+                      fill="rgba(26,188,156,0.08)" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                <path d="M400,350 L460,340 L490,380 L450,410 L390,400 L380,370 Z"
+                      fill="rgba(211,84,0,0.08)" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+
+                <!-- Подписи регионов -->
+                <text x="650" y="185" fill="rgba(255,255,255,0.04)" font-size="10" font-weight="600">Ярославская</text>
+                <text x="760" y="175" fill="rgba(255,255,255,0.04)" font-size="10" font-weight="600">Костромская</text>
+                <text x="710" y="295" fill="rgba(255,255,255,0.04)" font-size="10" font-weight="600">Ивановская</text>
+                <text x="590" y="320" fill="rgba(255,255,255,0.04)" font-size="10" font-weight="600">Владимирская</text>
+                <text x="390" y="245" fill="rgba(255,255,255,0.04)" font-size="10" font-weight="600">Московская</text>
+
+                <!-- Волга -->
+                <path d="M740,110 Q760,150 730,190 Q700,230 720,270 Q740,310 720,350 Q700,390 680,430 Q660,470 640,510"
+                      fill="none" stroke="rgba(52,152,219,0.08)" stroke-width="8" stroke-linecap="round"/>
+                <path d="M740,110 Q760,150 730,190 Q700,230 720,270 Q740,310 720,350 Q700,390 680,430 Q660,470 640,510"
+                      fill="none" stroke="rgba(52,152,219,0.04)" stroke-width="16" stroke-linecap="round"/>
+
+                <!-- ===== 14 ГОРОДОВ ===== -->
+
+                <!-- 1. Сергиев Посад -->
+                <g class="city-point" onclick="openCity(0)">
+                    <circle class="city-circle" r="10" cx="380" cy="225"/>
+                    <text class="city-icon-text" x="380" y="225">⛪</text>
+                    <text class="city-label" x="380" y="206" font-size="8">Сергиев Посад</text>
+                </g>
+
+                <!-- 2. Переславль-Залесский -->
+                <g class="city-point" onclick="openCity(1)">
+                    <circle class="city-circle" r="10" cx="440" cy="235"/>
+                    <text class="city-icon-text" x="440" y="235">⛵</text>
+                    <text class="city-label" x="440" y="216" font-size="8">Переславль-Залесский</text>
+                </g>
+
+                <!-- 3. Ростов Великий -->
+                <g class="city-point" onclick="openCity(2)">
+                    <circle class="city-circle" r="10" cx="510" cy="190"/>
+                    <text class="city-icon-text" x="510" y="190">🔔</text>
+                    <text class="city-label" x="510" y="171" font-size="8">Ростов Великий</text>
+                </g>
+
+                <!-- 4. Углич -->
+                <g class="city-point" onclick="openCity(3)">
+                    <circle class="city-circle" r="10" cx="570" cy="165"/>
+                    <text class="city-icon-text" x="570" y="165">🏰</text>
+                    <text class="city-label" x="570" y="146" font-size="8">Углич</text>
+                </g>
+
+                <!-- 5. Ярославль -->
+                <g class="city-point" onclick="openCity(4)">
+                    <circle class="city-circle" r="11" cx="635" cy="195"/>
+                    <text class="city-icon-text" x="635" y="195">🐻</text>
+                    <text class="city-label" x="635" y="176" font-size="8">Ярославль</text>
+                </g>
+
+                <!-- 6. Кострома -->
+                <g class="city-point" onclick="openCity(5)">
+                    <circle class="city-circle" r="10" cx="710" cy="205"/>
+                    <text class="city-icon-text" x="710" y="205">❄️</text>
+                    <text class="city-label" x="710" y="186" font-size="8">Кострома</text>
+                </g>
+
+                <!-- 7. Иваново -->
+                <g class="city-point" onclick="openCity(6)">
+                    <circle class="city-circle" r="10" cx="680" cy="280"/>
+                    <text class="city-icon-text" x="680" y="280">🧵</text>
+                    <text class="city-label" x="680" y="261" font-size="8">Иваново</text>
+                </g>
+
+                <!-- 8. Суздаль -->
+                <g class="city-point" onclick="openCity(7)">
+                    <circle class="city-circle" r="10" cx="600" cy="320"/>
+                    <text class="city-icon-text" x="600" y="320">🏛️</text>
+                    <text class="city-label" x="600" y="301" font-size="8">Суздаль</text>
+                </g>
+
+                <!-- 9. Владимир -->
+                <g class="city-point" onclick="openCity(8)">
+                    <circle class="city-circle" r="11" cx="550" cy="430"/>
+                    <text class="city-icon-text" x="550" y="430">⭐</text>
+                    <text class="city-label" x="550" y="411" font-size="8">Владимир</text>
+                </g>
+
+                <!-- 10. Плёс -->
+                <g class="city-point" onclick="openCity(9)">
+                    <circle class="city-circle" r="10" cx="660" cy="390"/>
+                    <text class="city-icon-text" x="660" y="390">🎨</text>
+                    <text class="city-label" x="660" y="371" font-size="8">Плёс</text>
+                </g>
+
+                <!-- 11. Муром -->
+                <g class="city-point" onclick="openCity(10)">
+                    <circle class="city-circle" r="10" cx="500" cy="500"/>
+                    <text class="city-icon-text" x="500" y="500">⚔️</text>
+                    <text class="city-label" x="500" y="481" font-size="8">Муром</text>
+                </g>
+
+                <!-- 12. Серпухов -->
+                <g class="city-point" onclick="openCity(11)">
+                    <circle class="city-circle" r="10" cx="370" cy="380"/>
+                    <text class="city-icon-text" x="370" y="380">🏛️</text>
+                    <text class="city-label" x="370" y="361" font-size="8">Серпухов</text>
+                </g>
+
+                <!-- 13. Александров -->
+                <g class="city-point" onclick="openCity(12)">
+                    <circle class="city-circle" r="10" cx="430" cy="300"/>
+                    <text class="city-icon-text" x="430" y="300">🏰</text>
+                    <text class="city-label" x="430" y="281" font-size="8">Александров</text>
+                </g>
+
+                <!-- 14. Юрьев-Польский -->
+                <g class="city-point" onclick="openCity(13)">
+                    <circle class="city-circle" r="10" cx="520" cy="270"/>
+                    <text class="city-icon-text" x="520" y="270">⛪</text>
+                    <text class="city-label" x="520" y="251" font-size="8">Юрьев-Польский</text>
+                </g>
+
+                <!-- Москва (ориентир) -->
+                <circle cx="340" cy="280" r="5" fill="rgba(255,255,255,0.05)" stroke="rgba(255,215,0,0.03)" stroke-width="1"/>
+                <text x="340" y="295" fill="rgba(255,255,255,0.04)" font-size="8" text-anchor="middle">Москва</text>
+
+                <!-- Надпись РОССИЯ -->
+                <text x="150" y="630" fill="rgba(255,215,0,0.02)" font-size="44" font-weight="800" letter-spacing="14">РОССИЯ</text>
+            </svg>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-bar-wrap">
+                <div class="progress-bar-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text">
+                🏅 Открыто: <span id="openedCount">0</span> из <span id="totalCities">14</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== КАРТОЧКА ГОРОДА ===== -->
+    <div class="city-card" id="cityCard">
+        <div class="city-card-header">
+            <h2 id="cityTitle">Город</h2>
+            <span class="city-status" id="cityStatus">⏳ Не открыт</span>
+        </div>
+        <div class="city-card-body">
+            <div class="city-story">
+                <h3>📖 История города</h3>
+                <p id="cityDescription">Загрузка...</p>
+                <div class="fact-box">
+                    <strong>🔍 Интересный факт:</strong> <span id="cityFactText">—</span>
+                </div>
+            </div>
+            <div class="city-task">
+                <h3>✍️ Патриотическое задание</h3>
+                <div class="task-text" id="taskText">Прочитай историю и выполни задание.</div>
+                <textarea id="taskAnswer" placeholder="Напиши свой ответ здесь..."></textarea>
+                <br>
+                <button class="btn-complete" id="btnComplete" onclick="completeTask()">✅ Открыть город</button>
+                <div class="task-status" id="taskStatus">🎉 Город открыт! Ты узнал о нём больше.</div>
+            </div>
+        </div>
+        <button class="btn-close-card" onclick="closeCard()">✕ Закрыть</button>
+    </div>
+
+    <!-- ===== ФИНАЛ С НАГРАДОЙ ===== -->
+    <div class="final-screen" id="finalScreen">
+        <div class="final-badge">🏆 ПАТРИОТИЧЕСКАЯ НАГРАДА</div>
+        <div class="final-icon">🇷🇺</div>
+        <h2>Ты — настоящий патриот!</h2>
+        <p class="final-subtitle">Ты открыл все 14 городов Золотого кольца России</p>
+        <p class="final-text">
+            Ты узнал историю своей страны, познакомился с её культурным наследием,<br>
+            открыл для себя удивительные города, которыми гордится вся Россия.<br><br>
+            <strong style="color:#FFD700;font-size:1.2em;">Ты доказал, что любишь свою Родину!</strong>
+        </p>
+
+        <div class="certificate-award">
+            <div class="award-title">📜 СЕРТИФИКАТ «ЗНАТОКА РОССИИ»</div>
+            <div class="award-subtitle">Настоящий сертификат подтверждает, что</div>
+            <div class="award-name" id="userName">Юный исследователь</div>
+            <div class="award-desc">
+                успешно прошёл интерактивное путешествие по Золотому кольцу России,<br>
+                изучил историю и культуру <strong style="color:#FFD700;">14 древних городов</strong>,<br>
+                выполнил все патриотические задания<br>
+                и проявил <strong style="color:#FFD700;">глубокое уважение к истории своей страны</strong>.<br><br>
+                <span style="color:#FFD700;">«Кто не знает своего прошлого, тот не имеет будущего»</span>
+            </div>
+            <div class="award-stamp">⭐ 👑 ⭐</div>
+            <div class="award-date">
+                Россия, 2026 год · С любовью к Родине ❤️
+            </div>
+        </div>
+
+        <p style="font-size:0.9em;color:#6A8BB0;margin:4px 0 12px;">
+            Сохрани этот сертификат как память о твоём путешествии по России!
+        </p>
+
+        <button class="btn-reset" onclick="resetAll()">🔄 Пройти путешествие заново</button>
+    </div>
+
+    <div class="footer">
+        © 2026 · <span class="gold">Золотое кольцо России</span> · 14 городов · Интерактивный путеводитель<br>
+        Создано с <span class="heart">❤</span> к Родине и уважением к её истории
+    </div>
+
+    <!-- ===== СКРИПТ ===== -->
+    <script>
+        const cities = [{
+            name: 'Сергиев Посад',
+            icon: '⛪',
+            status: false,
+            story: 'Сергиев Посад называют «духовным сердцем России». Здесь находится Троице-Сергиева лавра — крупнейший мужской монастырь страны, основанный преподобным Сергием Радонежским в XIV веке. Монастырь стал центром православной веры и символом единства русского народа.',
+            fact: 'В лавре хранятся мощи Сергия Радонежского, благословившего Дмитрия Донского на Куликовскую битву.',
+            task: 'Почему Сергиев Посад называют «духовным сердцем России»? Что делает этот город важным для всех россиян?'
+        }, {
+            name: 'Переславль-Залесский',
+            icon: '⛵',
+            status: false,
+            story: 'Переславль-Залесский основан князем Юрием Долгоруким. Это родина Александра Невского. На Плещеевом озере юный Пётр I строил свою «потешную флотилию» — первый русский военный флот.',
+            fact: 'В Переславле находится единственный в мире музей утюгов — более 200 экспонатов.',
+            task: 'Почему важно помнить о полководцах, таких как Александр Невский? Что они дали нашей стране?'
+        }, {
+            name: 'Ростов Великий',
+            icon: '🔔',
+            status: false,
+            story: 'Ростов Великий — один из древнейших городов России, известный с 862 года. Его сердце — Ростовский кремль. Главная гордость — 13 колоколов, каждый со своим голосом. Самый большой весит 32 тонны.',
+            fact: 'В Ростове снимали сцены фильма «Иван Васильевич меняет профессию».',
+            task: 'Представь, что ты экскурсовод. Напиши 2-3 предложения, чтобы пригласить туристов в Ростов Великий.'
+        }, {
+            name: 'Углич',
+            icon: '🏰',
+            status: false,
+            story: 'Углич — древний город на Волге, известный с 937 года. В 2018 году официально включён в Золотое кольцо России. Здесь произошла трагедия — гибель царевича Дмитрия. Церковь «На крови» стоит на месте его гибели.',
+            fact: 'Угличские часы с кукушкой делают вручную, каждая пара уникальна!',
+            task: 'Почему важно сохранять память о трагических событиях истории?'
+        }, {
+            name: 'Ярославль',
+            icon: '🐻',
+            status: false,
+            story: 'Ярославль основан князем Ярославом Мудрым в 1010 году на Волге. Это крупнейший город Золотого кольца. Символ — медведь. Здесь найдена рукопись «Слово о полку Игореве».',
+            fact: 'В Ярославле напечатали первую российскую книгу — «Апостол».',
+            task: 'Представь, что ты живёшь в Ярославле. Почему ты гордишься своим городом?'
+        }, {
+            name: 'Кострома',
+            icon: '❄️',
+            status: false,
+            story: 'Кострома — родина Снегурочки! Город стоит на Волге и Костроме. Улицы расходятся веером — по легенде, Екатерина II развернула веер, и город сделали таким. Ипатьевский монастырь — место венчания на царство Михаила Романова.',
+            fact: 'В Костроме есть музей Снегурочки с нарядами русских красавиц.',
+            task: 'Как ты понимаешь «Кострома — родина Снегурочки»? Почему город связан со сказками?'
+        }, {
+            name: 'Иваново',
+            icon: '🧵',
+            status: false,
+            story: 'Иваново — город невест и ситцев. С XVII века здесь производят ткани. В годы войны ткачихи шили ткань для военной формы, помогали фронту.',
+            fact: 'Иваново — единственный город Золотого кольца без древнего кремля.',
+            task: 'Почему Иваново называют «городом невест»? С чем это связано?'
+        }, {
+            name: 'Суздаль',
+            icon: '🏛️',
+            status: false,
+            story: 'Суздаль — город-музей под открытым небом! Более 50 храмов, ни одного высотного здания. Единственный город России, полностью признанный музейным. Музей деревянного зодчества — избы без единого гвоздя.',
+            fact: 'В Суздале ежегодно проходит праздник огурца — местные огурцы знамениты на всю Россию!',
+            task: 'Почему так важно сохранять старинные города? Что мы теряем без Суздаля?'
+        }, {
+            name: 'Владимир',
+            icon: '⭐',
+            status: false,
+            story: 'Владимир — древняя столица Северо-Восточной Руси. Город основан Владимиром Мономахом. Золотые ворота — главный символ и древнейшая постройка XII века. Успенский собор — в списке ЮНЕСКО.',
+            fact: 'Владимир — первый город России, получивший награду за сохранение наследия.',
+            task: 'Что значит слово «Родина» для тебя? Почему ты гордишься Россией?'
+        }, {
+            name: 'Плёс',
+            icon: '🎨',
+            status: false,
+            story: 'Плёс — маленький, но красивый город на Волге. Его рисовал Левитан — здесь созданы «Вечерний звон» и «Над вечным покоем». Плёс — место, где природа и история соединились в образе России.',
+            fact: 'В Плёсе жил и работал художник Исаак Левитан.',
+            task: 'Какие чувства вызывает у тебя природа России? Почему она вдохновляет художников?'
+        }, {
+            name: 'Муром',
+            icon: '⚔️',
+            status: false,
+            story: 'Муром — родина былинного богатыря Ильи Муромца! Город на Оке, известный с 862 года. Муром — символ русской силы и доблести, место, где зарождалась богатырская слава Руси.',
+            fact: 'В Муроме находится Спасо-Преображенский монастырь — древнейший в России.',
+            task: 'Кто такой Илья Муромец? Почему богатыри — символы русского народа?'
+        }, {
+            name: 'Серпухов',
+            icon: '🏛️',
+            status: false,
+            story: 'Серпухов — древний город на реке Нара, известный с 1339 года. Был важным форпостом Московского княжества. Здесь находится Высоцкий монастырь — одна из главных святынь Подмосковья.',
+            fact: 'В Серпухове есть памятник Святому Георгию Победоносцу — покровителю русского воинства.',
+            task: 'Почему Серпухов называли «щитом Москвы»? Что такое защита Отечества для тебя?'
+        }, {
+            name: 'Александров',
+            icon: '🏰',
+            status: false,
+            story: 'Александров — город с богатой историей. В XVI веке здесь была резиденция Ивана Грозного — Александровская слобода. Это место, где начиналась история российского самодержавия.',
+            fact: 'В Александрове Иван Грозный принял решение о введении опричнины.',
+            task: 'Почему важно знать историю своего государства? Что мы можем из неё извлечь?'
+        }, {
+            name: 'Юрьев-Польский',
+            icon: '⛪',
+            status: false,
+            story: 'Юрьев-Польский основан в 1152 году Юрием Долгоруким на реке Колокша. Название означает «город Юрия в поле». Здесь сохранился Георгиевский собор — памятник белокаменного зодчества.',
+            fact: 'В Юрьеве-Польском снимали фильм «Сказ о Петре и Февронии».',
+            task: 'Что ты чувствуешь, когда видишь древние храмы? Почему их нужно беречь для потомков?'
+        }];
+
+        let openedCount = 0;
+        let currentIndex = -1;
+        const total = cities.length;
+        document.getElementById('totalCities').textContent = total;
+
+        function openCity(index) {
+            const city = cities[index];
+            currentIndex = index;
+
+            document.getElementById('cityTitle').textContent = city.icon + ' ' + city.name;
+            document.getElementById('cityDescription').textContent = city.story;
+            document.getElementById('cityFactText').textContent = city.fact;
+            document.getElementById('taskText').textContent = city.task;
+            document.getElementById('taskAnswer').value = '';
+            document.getElementById('taskStatus').className = 'task-status';
+            document.getElementById('btnComplete').disabled = false;
+
+            const statusEl = document.getElementById('cityStatus');
+            if (city.status) {
+                statusEl.textContent = '✅ Открыт';
+                statusEl.style.color = '#6FCF97';
+                document.getElementById('btnComplete').disabled = true;
+                document.getElementById('taskStatus').className = 'task-status visible';
+            } else {
+                statusEl.textContent = '⏳ Не открыт';
+                statusEl.style.color = '#D4E4FF';
+            }
+
+            document.getElementById('cityCard').className = 'city-card active';
+            document.getElementById('finalScreen').className = 'final-screen';
+            window.scrollTo({ top: document.getElementById('cityCard').offsetTop - 20, behavior: 'smooth' });
+        }
+
+        function closeCard() {
+            document.getElementById('cityCard').className = 'city-card';
+            currentIndex = -1;
+            checkFinal();
+        }
+
+        function completeTask() {
+            if (currentIndex === -1) return;
+            const city = cities[currentIndex];
+            if (city.status) return;
+
+            const answer = document.getElementById('taskAnswer').value.trim();
+            if (answer.length < 2) {
+                alert('✍️ Напиши свой ответ в поле для задания, чтобы открыть город!');
+                return;
+            }
+
+            city.status = true;
+            openedCount++;
+            document.getElementById('openedCount').textContent = openedCount;
+
+            const fill = document.getElementById('progressFill');
+            fill.style.width = (openedCount / total * 100) + '%';
+
+            document.getElementById('cityStatus').textContent = '✅ Открыт';
+            document.getElementById('cityStatus').style.color = '#6FCF97';
+            document.getElementById('btnComplete').disabled = true;
+            document.getElementById('taskStatus').className = 'task-status visible';
+
+            const circles = document.querySelectorAll('.city-circle');
+            if (circles[currentIndex]) {
+                circles[currentIndex].classList.add('opened');
+            }
+
+            setTimeout(closeCard, 1200);
+        }
+
+        function checkFinal() {
+            if (openedCount === total) {
+                document.getElementById('finalScreen').className = 'final-screen active';
+                document.getElementById('cityCard').className = 'city-card';
+                document.getElementById('userName').textContent = 'Юный исследователь';
+            }
+        }
+
+        function resetAll() {
+            if (!confirm('Точно начать всё заново? Все ответы будут стёрты.')) return;
+            cities.forEach(c => c.status = false);
+            openedCount = 0;
+            document.getElementById('openedCount').textContent = '0';
+            document.getElementById('progressFill').style.width = '0%';
+            document.querySelectorAll('.city-circle').forEach(el => el.classList.remove('opened'));
+            document.getElementById('finalScreen').className = 'final-screen';
+            document.getElementById('cityCard').className = 'city-card';
+            currentIndex = -1;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.city-circle').forEach(el => el.classList.remove('opened'));
+            document.getElementById('openedCount').textContent = '0';
+            document.getElementById('progressFill').style.width = '0%';
+        });
+    </script>
+
+</body>
+</html>
